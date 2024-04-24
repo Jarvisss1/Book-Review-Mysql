@@ -34,5 +34,21 @@ const singleBook = (req, res) => {
   });
 };
 
+const searchBook = (req, res) => {
+  const searchTerm = req.params.searchTerm;
+  const query = `
+        SELECT *
+        FROM books_with_average_rating
+        WHERE title LIKE ? OR authors LIKE ? OR publisher LIKE ?;
+    `;
+  db.query(query, [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`], (err, results) => {
+    if (err) {
+      console.error("Error fetching book with rating:", err);
+      res.status(500).json({ error: "Internal server error" });
+      return;
+    }
+    res.json(results);
+  });
+};
 
-module.exports = { allBooks, singleBook };
+module.exports = { allBooks, singleBook, searchBook };

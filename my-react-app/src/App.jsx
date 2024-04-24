@@ -9,55 +9,58 @@ import Home from "./pages/Home/Home";
 import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
 import Book from "./pages/Book/Book";
+import MyReviews from "./pages/MyReviews/MyReviews";
 
-const Layout = ({ onSearch, searchTerm }) => {
+const Layout = ({ results, setResults,user }) => {
   return (
     <div>
-      <Navbar onSearch={onSearch} />
+      {/* Pass results to the Navbar component */}
+      <Navbar setResults={setResults} user={user} />
       <Outlet />
       <Footer />
     </div>
   );
 };
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/book/:id",
-        element: <Book />,
-      },
-    ],
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-]);
-
 function App() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [results, setResults] = useState([]);
+  const [user, setUser] = useState(null);
 
-  const handleSearch = (searchTerm) => {
-    // Update the search term state
-    setSearchTerm(searchTerm);
-    console.log("Searching for:", searchTerm);
-  };
+  // Define the routes with the correct props
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Layout results={results} setResults={setResults} />, // Pass results to the Layout component
+      children: [
+        {
+          path: "/",
+          element: <Home results={results} user={user}/>, // Pass results to the Home component
+        },
+        {
+          path: "/book/:id",
+          element: <Book />,
+        },
+        {
+          path: "/myReviews",
+          element: <MyReviews />,
+        },
+      ],
+    },
+    {
+      path: "/register",
+      element: <Register />,
+    },
+    {
+      path: "/login",
+      element: <Login setUser={setUser} />,
+    },
+  ]);
 
   return (
     <div className="App">
       <RouterProvider router={router}>
-        <Layout onSearch={handleSearch} searchTerm={searchTerm} />
+        {/* Pass results to the Layout component */}
+        <Layout results={results} user={user}/>
       </RouterProvider>
     </div>
   );

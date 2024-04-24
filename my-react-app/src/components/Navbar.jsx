@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 
-const Navbar = ({user,  onSearch }) => {
+const Navbar = ({setResults, user}) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleLogout = () => {
@@ -11,8 +11,13 @@ const Navbar = ({user,  onSearch }) => {
   };
 
   const handleSearch = () => {
-    // Call search function passed from parent component
-    onSearch(searchTerm);
+    fetch(`http://localhost:5000/api/books/search/${searchTerm}`)
+      .then((res) => res.json())
+      .then((json) => {
+        const results = json.filter((book) => book.title.toLowerCase().includes(searchTerm.toLowerCase()));
+        console.log(results);
+        setResults(results);
+      });
   };
 
   return (
@@ -29,6 +34,9 @@ const Navbar = ({user,  onSearch }) => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button onClick={handleSearch}>Search</button>
+        </div>
+        <div className="my-reviews">
+          {user && <Link to="/myReviews">My Reviews</Link>}
         </div>
       </div>
       <div className="navbar-right">

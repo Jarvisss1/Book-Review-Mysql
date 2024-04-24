@@ -3,7 +3,7 @@ import axios from "axios";
 import Card from "../../components/Card/Card";
 import "./Home.css";
 
-function Home(searchTerm) {
+function Home({ results }) {
   const [books, setBooks] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
@@ -22,20 +22,16 @@ function Home(searchTerm) {
     fetchBooks();
   }, []);
 
-  // Callback function to handle search
-  const handleSearch = (searchTerm) => {
-    const filteredBooks = books.filter(
-      (book) =>
-        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        book.authors.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        book.publisher.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setSearchResults(filteredBooks);
-  };
+  useEffect(() => {
+    setSearchResults(results);
+  }, [results]);
 
   return (
     <div>
       <div className="row">
+        {searchResults.length > 0 && (
+          <h2 className="search-results-heading">Search Results</h2>
+        )}
         {(searchResults.length > 0 ? searchResults : books).map((book) => (
           <div key={book.id}>
             <Card
@@ -48,7 +44,6 @@ function Home(searchTerm) {
             />
           </div>
         ))}
-        hello
       </div>
     </div>
   );

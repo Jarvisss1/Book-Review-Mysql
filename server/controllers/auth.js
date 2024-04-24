@@ -67,8 +67,13 @@ const login = (req, res) => {
   });
 };
 
-// const logout = (req, res) => {
-//   res.json("Logout Page");
-// };
+const logout = (req, res) => {
+  // Clear the access token cookie
+  res.clearCookie("access_token").json({ message: "Logged out" });
 
-module.exports = {register, login};
+  // Remove user data from localStorage
+  localStorage.removeItem("user");
+};
+
+module.exports = { register, login, logout };
+

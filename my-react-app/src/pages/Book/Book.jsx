@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./Book.css";
+import moment from "moment";
 
 const Book = () => {
   const [book, setBook] = useState({});
@@ -93,6 +94,7 @@ const Book = () => {
             <div className="book-additional-info">
               <p className="book-language">Language: {book.language}</p>
               <p className="book-page-count">Page Count: {book.pageCount}</p>
+              <p className="book-page-count">Description: {book.description}</p>
             </div>
             <a href={book.infoLink} className="book-more-info">
               More Info
@@ -110,9 +112,14 @@ const Book = () => {
         <button onClick={() => setShowModal(true)}>Add review</button>
         {reviews.map((review) => (
           <div key={review.review_id} className="review-item">
-            <p className="review-text">{review.review_text}</p>
-            <p className="review-rating">Rating: {review.rating}</p>
-            <p className="review-by">By: {review.username}</p>
+            
+              <p className="review-text">{review.review_text}</p>
+              <p className="review-rating">Rating: {review.rating}</p>
+              <p className="review-by">By: {review.username}</p>
+            <p className="review-posted-at">
+              Posted {moment(review.created_at).fromNow()}{" "}
+              {/* Display the moment when the review is posted */}
+            </p>
           </div>
         ))}
       </div>

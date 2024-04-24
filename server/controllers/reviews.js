@@ -123,5 +123,25 @@ const createUpdateAverageRatingTrigger = async (req, res) => {
   }
 };
 
+const updateReview = (req,res)=>{
+  const { review_text, rating, review_id } = req.body;
+  console.log(req.body);
 
-module.exports = {getReviewsByBookId, addReview, getBooksWithAverageRating};
+  if (!review_id) {
+    return res.status(400).json({ error: "Review ID is required" });
+  }
+
+  const query = `UPDATE reviews SET review_text = ?, rating = ? WHERE review_id = ?;`;
+
+  db.query(query, [review_text, rating, review_id], (err, results) => {
+    if (err) {
+      console.error("Error updating review:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+    res.status(201).json({ message: "Review updated successfully" });
+  });
+
+}
+
+
+module.exports = {getReviewsByBookId, addReview, getBooksWithAverageRating, updateReview};

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Register/Register.css";
 import { useAuth } from "../../context/authContext";
 
-function Login() {
+function Login({setUser}) {
   const { login } = useAuth();
   const [inputs, setInputs] = useState({
     username: "",
@@ -18,7 +18,8 @@ function Login() {
     e.preventDefault();
     console.log(inputs);
     try {
-      await login(inputs); // Pass inputs to login function
+      await login(inputs,setUser); // Pass inputs to login function
+      // Redirect to home page
     } catch (error) {
       console.log("Error occurred while logging in:", error);
     }
